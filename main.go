@@ -38,7 +38,8 @@ func NewResponse(r *http.Request, contentType string, status int, contentFileNam
 
 	b, e := ioutil.ReadFile(contentFileName)
 	if e != nil {
-		panic(e)
+		fmt.Errorf("Error when reading", contentFileName, e.Error())
+		return nil
 	}
 	reader := bytes.NewReader(b)
 	resp.ContentLength = int64(reader.Len())
