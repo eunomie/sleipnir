@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"io/ioutil"
+	"bytes"
 )
 
 func getConfig(configFile string) [][]string {
@@ -32,17 +34,14 @@ func NewResponse(r *http.Request, contentType string, status int, contentFileNam
 	resp.Header = make(http.Header)
 	resp.Header.Add("Content-Type", contentType)
 	resp.StatusCode = status
-	file, e := os.Open(contentFileName)
+
+	b,e := ioutil.ReadFile(contentFileName)
 	if e != nil {
 		panic(e)
 	}
-	defer file.Close()
-	fileInfo, e := file.Stat()
-	if e != nil {
-		panic(e)
-	}
-	resp.ContentLength = fileInfo.Size()
-	resp.Body = file
+	reader := bytes.NewReader(b)
+	resp.ContentLength = int64(reader.Len())
+	resp.Body = ioutil.NopCloser(reader)
 	return resp
 }
 
