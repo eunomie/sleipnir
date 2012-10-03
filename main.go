@@ -56,12 +56,16 @@ func CreateDefault(listen string, configFile string, verbose bool) {
 			// header line
 			continue
 		}
-		fmt.Println("- replace", config[0], "by", config[2])
-		proxy.OnRequest(goproxy.UrlIs(config[0])).DoFunc(
-			func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
-				fmt.Println("Intercept", config[0])
-				return r, NewResponse(r, config[1], http.StatusOK, config[2])
-			})
+		defaultUrl := config[0]
+    contentType := config[1]
+    newFile := config[2]
+    fmt.Println("- replace", defaultUrl, "by", newFile)
+    proxy.OnRequest(goproxy.UrlIs(defaultUrl)).DoFunc(
+      func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
+        fmt.Println("Intercept", defaultUrl)
+        response := NewResponse(r, contentType, http.StatusOK, newFile)
+        return r,response
+      })
 	}
 	fmt.Println("")
 	fmt.Println("^C to stop")
