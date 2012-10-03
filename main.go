@@ -1,14 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"encoding/csv"
 	"fmt"
 	"github.com/elazarl/goproxy"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"io/ioutil"
-	"bytes"
 )
 
 func getConfig(configFile string) [][]string {
@@ -35,7 +35,7 @@ func NewResponse(r *http.Request, contentType string, status int, contentFileNam
 	resp.Header.Add("Content-Type", contentType)
 	resp.StatusCode = status
 
-	b,e := ioutil.ReadFile(contentFileName)
+	b, e := ioutil.ReadFile(contentFileName)
 	if e != nil {
 		panic(e)
 	}
@@ -57,15 +57,15 @@ func CreateDefault(listen string, configFile string, verbose bool) {
 			continue
 		}
 		defaultUrl := config[0]
-    contentType := config[1]
-    newFile := config[2]
-    fmt.Println("- replace", defaultUrl, "by", newFile)
-    proxy.OnRequest(goproxy.UrlIs(defaultUrl)).DoFunc(
-      func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
-        fmt.Println("Intercept", defaultUrl)
-        response := NewResponse(r, contentType, http.StatusOK, newFile)
-        return r,response
-      })
+		contentType := config[1]
+		newFile := config[2]
+		fmt.Println("- replace", defaultUrl, "by", newFile)
+		proxy.OnRequest(goproxy.UrlIs(defaultUrl)).DoFunc(
+			func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
+				fmt.Println("Intercept", defaultUrl)
+				response := NewResponse(r, contentType, http.StatusOK, newFile)
+				return r, response
+			})
 	}
 	fmt.Println("")
 	fmt.Println("^C to stop")
