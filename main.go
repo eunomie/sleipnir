@@ -60,7 +60,8 @@ func CreateDefault(listen string, configFile string, verbose bool) {
     fmt.Println("- replace", config[0], "by", config[2])
     proxy.OnRequest(goproxy.UrlIs(config[0])).DoFunc(
       func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
-        return r, nil
+        fmt.Println("Intercept", config[0])
+        return r, NewResponse(r, config[1], http.StatusOK, config[2])
       })
   }
   fmt.Println("")
