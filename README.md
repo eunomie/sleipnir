@@ -44,3 +44,8 @@ Usage of ./sleipnir:
   -h=false: Print this help
   -v=false: Verbose
 ```
+
+Examples
+--------
+
+See the beautiful example in the download section!
