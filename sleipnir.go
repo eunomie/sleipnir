@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 )
 
 var contents = map[string][]byte{}
@@ -97,10 +98,14 @@ func CreateDefault(listen string, configFile string, verbose bool) {
 			continue
 		}
 		defaultUrl := config[0]
+		regexpUrl, e := regexp.Compile(defaultUrl)
+		if e != nil {
+			fmt.Errorf("Can't parse regexp", defaultUrl, e.Error())
+		}
 		contentType := config[1]
 		newFile := config[2]
 		fmt.Println("- replace", defaultUrl, "by", newFile)
-		proxy.OnRequest(goproxy.UrlIs(defaultUrl)).DoFunc(
+		proxy.OnRequest(goproxy.UrlMatches(regexpUrl)).DoFunc(
 			func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
 				fmt.Print("Intercept ", defaultUrl, " and serve ", newFile)
 				response := NewResponse(r, contentType, http.StatusOK, newFile)

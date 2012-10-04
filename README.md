@@ -14,6 +14,17 @@ Then, edit the csv. This is the pattern of each row :
 <url to catch>,<content type of the response>,<location of the file to server instead>
 ```
 
+The `<url to catch>` must be a valid regexp.
+
+By example you can create the following config file :
+
+```text
+path,contentType,file
+*.png,image/jpeg,myLolCat.jpg
+```
+
+which replace all png images by a nice jpeg cat.
+
 Run it :
 
 ```sh
