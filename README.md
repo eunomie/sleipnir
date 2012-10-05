@@ -20,7 +20,7 @@ By example you can create the following config file :
 
 ```text
 path,contentType,file
-*.png,image/jpeg,myLolCat.jpg
+.*.png,image/jpeg,myLolCat.jpg
 ```
 
 which replace all png images by a nice jpeg cat.
